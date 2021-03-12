@@ -1,0 +1,53 @@
+blog:
+- users
+- posts
+- comments
+
+1-1
+1-many
+many-many
+
+
+===
+Project Management:
+- users
+- projects
+- issues
+- user settings
+
+1:1 => user -> account settings
+    => task -> user (owner)
+    => task -> project
+1:m => project -> many tasks
+    => user -> many tasks
+m:m => many users <-> many projects
+
+
+Pages:
+- dashboard
+- account settings
+
+projects list
+project details: 
+  - attached users list
+  - attached tasks list
+
+users list
+user details: 
+- attached projects list
+- attached tasks list
+
+tasks list
+task details: 
+- attached project
+- attached user (owner)
+
+
+
+====
+domain entities vs app/feature state
+
+
+====
+bounded context:
+- 

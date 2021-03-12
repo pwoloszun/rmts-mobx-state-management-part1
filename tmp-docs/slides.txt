@@ -1,0 +1,109 @@
+===
+MobX overview:
+
+===
+MobX building blocks:
+State
+Actions
+Derivations
+  - Computed values
+  - Reactions
+
+===
+State - data that drives your application both:
+- domain entities and 
+- view state
+Metaphor: spreadsheet cells that hold values
+
+===
+Action - code that modifies the state
+Metaphor: user that enters a new value into a spreadsheet cell
+
+Actions always happen in response to an event: button was clicked, response from server arrived, etc.
+
+Action principles:
+- Actions are run inside transactions
+- NEVER change state outside of action
+- use action() anntoation only on methods and functions modifing state
+
+
+
+===
+Dervations: 
+- Computed values - derived from the current observable state using a pure function
+Metaphor: formulas in spreadsheet programs like Excel
+
+Computed values:
+- derive information from other observables
+- are evaluated lazily
+- are cached and recomputed only if one of its dependency observables has changed
+- suspend entirely if they are not observed by anything
+
+Rules of Computed values:
+- they should be pure:
+  - should NOW have side effects
+  - should NOT update other observables
+  - should NOT use indeterministic functions(Date.now(), Math.random(), etc.)
+- then should NOT create and return new observables
+
+
+
+===
+Dervations: 
+- Reactions - side effects that happen automatically when the state changes (bridge between imperative and reactive programming)
+Reactions produce side effects like:
+- printing to the console
+- making network requests
+- updating part of React component tree
+
+
+===
+Principles
+
+1) All derivations are updated automatically, atomically & synchronously when the state changes
+
+2) Computed values are updated lazily - will not be updated until it is needed for a side effect.
+If a view is no longer in use it will be garbage collected automatically.
+
+3) All computed values should be pure. They can't change state.
+
+
+===
+makeAutoObservable()
+Inference rules:
+
+Any (inherited) member that contains a function value will be annotated with autoAction.
+Any getter will be annotated with computed.
+Any other own field will be marked with observable.
+Any (inherited) member that is a generator function will be annotated with flow. (Note that generators functions are not detectable in some transpiler configurations, if flow doesn't work as expected, make sure to specify flow explicitly.)
+Members marked with false in the overrides argument will not be annotated. For example, using it for read only fields such as identifiers.
+
+
+
+
+
+
+
+#########
+later:
+
+=== 
+Custom reactions:
+
+MobX reacts to any existing observable property that is read during the execution of a tracked function.
+
+
+===
+Computed values should always be preferred over reactions.
+
+For several reasons:
+
+1) They are simple and easy to understand
+2) MobX Anti patterns: reaction that trigger more reactions, or reactions that update state.
+
+
+3) Computed values are enforced to be side-effect free.
+It can decide to only lazily run the computation if it is not observed.
+
+
+4) Computed values are cached automatically - reading a computed value will not re-run the computation unless observables changed
